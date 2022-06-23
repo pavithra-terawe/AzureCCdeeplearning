@@ -3,70 +3,151 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "location": {
-      "type": "String"
+      "type": "String",
+      "defaultValue": "westeurope"
     },
     "networkInterfaceName1": {
-      "type": "String"
+      "type": "String",
+      "defaultValue": "ccportal388_z1"
     },
     "networkSecurityGroupName": {
-      "type": "String"
+      "type": "String",
+      "defaultValue": "ccportal-nsg"
     },
     "networkSecurityGroupRules": {
-      "type": "Array"
+      "type": "Array",
+      "defaultValue": [
+            {
+              "name": "HTTPS",
+              "properties": {
+                "priority": 1010,
+                "protocol": "TCP",
+                "access": "Allow",
+                "direction": "Inbound",
+                "sourceApplicationSecurityGroups": [],
+                "destinationApplicationSecurityGroups": [],
+                "sourceAddressPrefix": "*",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*",
+                "destinationPortRange": "443"
+              }
+            },
+            {
+              "name": "HTTP",
+              "properties": {
+                "priority": 1020,
+                "protocol": "TCP",
+                "access": "Allow",
+                "direction": "Inbound",
+                "sourceApplicationSecurityGroups": [],
+                "destinationApplicationSecurityGroups": [],
+                "sourceAddressPrefix": "*",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*",
+                "destinationPortRange": "80"
+              }
+            },
+            {
+              "name": "default-allow-ssh",
+              "properties": {
+                "priority": 1030,
+                "protocol": "TCP",
+                "access": "Allow",
+                "direction": "Inbound",
+                "sourceApplicationSecurityGroups": [],
+                "destinationApplicationSecurityGroups": [],
+                "sourceAddressPrefix": "*",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*",
+                "destinationPortRange": "22"
+              }
+            }
+          ]
     },
     "subnetName": {
-      "type": "String"
+      "type": "String",
+      "defaultValue": "default"
     },
     "publicIpAddressName1": {
-      "type": "String"
+      "type": "String",
+      "defaultValue": "ccportal-ip"
     },
     "publicIpAddressType": {
-      "type": "String"
+      "type": "String",
+      "defaultValue": "Static"
     },
     "publicIpAddressSku": {
-      "type": "String"
+      "type": "String",
+      "defaultValue": "Standard"
     },
     "pipDeleteOption": {
-      "type": "String"
+      "type": "String",
+      "defaultValue": "Detach"
     },
     "virtualMachineName": {
-      "type": "String"
+      "type": "String",
+      "defaultValue": "ccportal"
     },
     "virtualMachineName1": {
-      "type": "String"
+      "type": "String",
+      "defaultValue": "ccportal"
     },
     "virtualNetworkName": {
-      "type": "String"
+      "type": "String",
+      "defaultValue": "ccportal-vnet"
     },
     "virtualMachineComputerName1": {
-      "type": "String"
+      "type": "String",
+      "defaultValue": "ccportal"
     },
     "virtualMachineRG": {
-      "type": "String"
+      "type": "String",
+      "defaultValue": "teraweDev"
     },
     "osDiskType": {
-      "type": "String"
+      "type": "String",
+      "defaultValue": "Premium_LRS"
     },
     "osDiskDeleteOption": {
-      "type": "String"
+      "type": "String",
+      "defaultValue": "Delete"
     },
     "dataDisks1": {
-      "type": "Array"
+      "type": "Array",
+      "defaultValue": [
+            {
+              "lun": 0,
+              "createOption": "fromImage",
+              "deleteOption": "Detach",
+              "caching": "None",
+              "writeAcceleratorEnabled": false,
+              "id": null,
+              "name": null,
+              "storageAccountType": "Premium_LRS",
+              "diskSizeGB": null,
+              "diskEncryptionSet": null
+            }
+          ]
     },
     "virtualMachineSize": {
-      "type": "String"
+      "type": "String",
+      "defaultValue": "Standard_ND40rs_v2"
     },
     "nicDeleteOption": {
-      "type": "String"
+      "type": "String",
+      "defaultValue": "Detach"
     },
     "adminUsername": {
-      "type": "String"
+      "type": "String",
+      "defaultValue": "deployeradmin"
     },
     "adminPassword": {
-      "type": "SecureString"
+      "type": "SecureString",
+      "defaultValue": "Terawe@12345"
     },
     "zone": {
-      "type": "String"
+      "type": "String",
+      "defaultValue": "1"
     }
   },
   "variables": {
