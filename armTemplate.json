@@ -131,7 +131,7 @@
     },
     "virtualMachineSize": {
       "type": "String",
-      "defaultValue": "Standard_ND40rs_v2"
+      "defaultValue": "Standard_ND96asr_v4"
     },
     "nicDeleteOption": {
       "type": "String",
