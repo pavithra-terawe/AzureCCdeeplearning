@@ -1,0 +1,7 @@
+{
+  "$schema": "https://aka.ms/azure-quickstart-templates-metadata-schema#",
+  "type": "QuickStart",
+  "itemDisplayName": "Azure HPC Deep Learning",
+  "description": "Azure HPC Deep Learning",
+  "summary": "Azure HPC Deep Learning"
+}
