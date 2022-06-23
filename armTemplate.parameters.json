@@ -1,0 +1,131 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+          "value": "eastus"
+        },
+        "networkInterfaceName1": {
+          "value": "ccportal388_z1"
+        },
+        "networkSecurityGroupName": {
+          "value": "ccportal-nsg"
+        },
+        "networkSecurityGroupRules": {
+          "value": [
+            {
+              "name": "HTTPS",
+              "properties": {
+                "priority": 1010,
+                "protocol": "TCP",
+                "access": "Allow",
+                "direction": "Inbound",
+                "sourceApplicationSecurityGroups": [],
+                "destinationApplicationSecurityGroups": [],
+                "sourceAddressPrefix": "*",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*",
+                "destinationPortRange": "443"
+              }
+            },
+            {
+              "name": "HTTP",
+              "properties": {
+                "priority": 1020,
+                "protocol": "TCP",
+                "access": "Allow",
+                "direction": "Inbound",
+                "sourceApplicationSecurityGroups": [],
+                "destinationApplicationSecurityGroups": [],
+                "sourceAddressPrefix": "*",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*",
+                "destinationPortRange": "80"
+              }
+            },
+            {
+              "name": "default-allow-ssh",
+              "properties": {
+                "priority": 1030,
+                "protocol": "TCP",
+                "access": "Allow",
+                "direction": "Inbound",
+                "sourceApplicationSecurityGroups": [],
+                "destinationApplicationSecurityGroups": [],
+                "sourceAddressPrefix": "*",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*",
+                "destinationPortRange": "22"
+              }
+            }
+          ]
+        },
+        "subnetName": {
+          "value": "default"
+        },
+        "publicIpAddressName1": {
+          "value": "ccportal-ip"
+        },
+        "publicIpAddressType": {
+          "value": "Static"
+        },
+        "publicIpAddressSku": {
+          "value": "Standard"
+        },
+        "pipDeleteOption": {
+          "value": "Detach"
+        },
+        "virtualMachineName": {
+          "value": "ccportal"
+        },
+        "virtualMachineName1": {
+          "value": "ccportal"
+        },
+        "virtualNetworkName": {
+          "value": "ccportal-vnet"
+        },
+        "virtualMachineComputerName1": {
+          "value": "ccportal"
+        },
+        "virtualMachineRG": {
+          "value": "pavithraTest"
+        },
+        "osDiskType": {
+          "value": "Premium_LRS"
+        },
+        "osDiskDeleteOption": {
+          "value": "Delete"
+        },
+        "dataDisks1": {
+          "value": [
+            {
+              "lun": 0,
+              "createOption": "fromImage",
+              "deleteOption": "Detach",
+              "caching": "None",
+              "writeAcceleratorEnabled": false,
+              "id": null,
+              "name": null,
+              "storageAccountType": "Premium_LRS",
+              "diskSizeGB": null,
+              "diskEncryptionSet": null
+            }
+          ]
+        },
+        "virtualMachineSize": {
+          "value": "Standard_DS1_v2"
+        },
+        "nicDeleteOption": {
+          "value": "Detach"
+        },
+        "adminUsername": {
+          "value": "deployeradmin"
+        },
+        "adminPassword": {
+          "value": "Terawe@12345"
+        },
+        "zone": {
+          "value": "1"
+        }
+    }
+}
