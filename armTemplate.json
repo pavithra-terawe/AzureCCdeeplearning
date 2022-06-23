@@ -1,0 +1,375 @@
+{
+  "properties": {
+    "mode": "Incremental",
+    "template": {
+      "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "location": {
+          "type": "String"
+        },
+        "networkInterfaceName1": {
+          "type": "String"
+        },
+        "networkSecurityGroupName": {
+          "type": "String"
+        },
+        "networkSecurityGroupRules": {
+          "type": "Array"
+        },
+        "subnetName": {
+          "type": "String"
+        },
+        "publicIpAddressName1": {
+          "type": "String"
+        },
+        "publicIpAddressType": {
+          "type": "String"
+        },
+        "publicIpAddressSku": {
+          "type": "String"
+        },
+        "pipDeleteOption": {
+          "type": "String"
+        },
+        "virtualMachineName": {
+          "type": "String"
+        },
+        "virtualMachineName1": {
+          "type": "String"
+        },
+        "virtualNetworkName": {
+          "type": "String"
+        },
+        "virtualMachineComputerName1": {
+          "type": "String"
+        },
+        "virtualMachineRG": {
+          "type": "String"
+        },
+        "osDiskType": {
+          "type": "String"
+        },
+        "osDiskDeleteOption": {
+          "type": "String"
+        },
+        "dataDisks1": {
+          "type": "Array"
+        },
+        "virtualMachineSize": {
+          "type": "String"
+        },
+        "nicDeleteOption": {
+          "type": "String"
+        },
+        "adminUsername": {
+          "type": "String"
+        },
+        "adminPassword": {
+          "type": "SecureString"
+        },
+        "zone": {
+          "type": "String"
+        }
+      },
+      "variables": {
+        "nsgId": "[resourceId(resourceGroup().name, 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]",
+        "vnetId": "[resourceId(resourceGroup().name,'Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
+        "subnetReference": "[concat(variables('vnetId'), '/subnets/', parameters('subnetName'))]"
+      },
+      "resources": [
+        {
+          "type": "Microsoft.Network/networkInterfaces",
+          "apiVersion": "2021-03-01",
+          "name": "[parameters('networkInterfaceName1')]",
+          "location": "[parameters('location')]",
+          "dependsOn": [
+            "[concat('Microsoft.Network/networkSecurityGroups/', parameters('networkSecurityGroupName'))]",
+            "[concat('Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'))]",
+            "[concat('Microsoft.Network/publicIpAddresses/', parameters('publicIpAddressName1'))]"
+          ],
+          "properties": {
+            "ipConfigurations": [
+              {
+                "name": "ipconfig1",
+                "properties": {
+                  "subnet": {
+                    "id": "[variables('subnetReference')]"
+                  },
+                  "privateIPAllocationMethod": "Dynamic",
+                  "publicIpAddress": {
+                    "id": "[resourceId(resourceGroup().name, 'Microsoft.Network/publicIpAddresses', parameters('publicIpAddressName1'))]",
+                    "properties": {
+                      "deleteOption": "[parameters('pipDeleteOption')]"
+                    }
+                  }
+                }
+              }
+            ],
+            "networkSecurityGroup": {
+              "id": "[variables('nsgId')]"
+            }
+          }
+        },
+        {
+          "type": "Microsoft.Network/networkSecurityGroups",
+          "apiVersion": "2019-02-01",
+          "name": "[parameters('networkSecurityGroupName')]",
+          "location": "[parameters('location')]",
+          "properties": {
+            "securityRules": "[parameters('networkSecurityGroupRules')]"
+          }
+        },
+        {
+          "type": "Microsoft.Network/publicIpAddresses",
+          "apiVersion": "2020-08-01",
+          "name": "[parameters('publicIpAddressName1')]",
+          "location": "[parameters('location')]",
+          "sku": {
+            "name": "[parameters('publicIpAddressSku')]"
+          },
+          "zones": [
+            "1"
+          ],
+          "properties": {
+            "publicIpAllocationMethod": "[parameters('publicIpAddressType')]"
+          }
+        },
+        {
+          "type": "Microsoft.Compute/virtualMachines",
+          "apiVersion": "2021-07-01",
+          "name": "[parameters('virtualMachineName1')]",
+          "location": "[parameters('location')]",
+          "dependsOn": [
+            "[concat('Microsoft.Network/networkInterfaces/', parameters('networkInterfaceName1'))]"
+          ],
+          "zones": [
+            "1"
+          ],
+          "plan": {
+            "name": "cyclecloud-81",
+            "publisher": "azurecyclecloud",
+            "product": "azure-cyclecloud"
+          },
+          "properties": {
+            "hardwareProfile": {
+              "vmSize": "[parameters('virtualMachineSize')]"
+            },
+            "storageProfile": {
+              "osDisk": {
+                "createOption": "fromImage",
+                "managedDisk": {
+                  "storageAccountType": "[parameters('osDiskType')]"
+                },
+                "deleteOption": "[parameters('osDiskDeleteOption')]"
+              },
+              "imageReference": {
+                "publisher": "microsoft-dsvm",
+                "offer": "ubuntu-1804",
+                "sku": "1804-gen2",
+                "version": "latest"
+              },
+              "copy": [
+                {
+                  "name": "dataDisks",
+                  "count": "[length(parameters('dataDisks1'))]",
+                  "input": {
+                    "lun": "[parameters('dataDisks1')[copyIndex('dataDisks')].lun]",
+                    "createOption": "[parameters('dataDisks1')[copyIndex('dataDisks')].createOption]",
+                    "caching": "[parameters('dataDisks1')[copyIndex('dataDisks')].caching]",
+                    "diskSizeGB": "[parameters('dataDisks1')[copyIndex('dataDisks')].diskSizeGB]",
+                    "managedDisk": {
+                      "id": "[coalesce(parameters('dataDisks1')[copyIndex('dataDisks')].id, if(equals(parameters('dataDisks1')[copyIndex('dataDisks')].name, json('null')), json('null'), resourceId('Microsoft.Compute/disks', parameters('dataDisks1')[copyIndex('dataDisks')].name)))]",
+                      "storageAccountType": "[parameters('dataDisks1')[copyIndex('dataDisks')].storageAccountType]"
+                    },
+                    "deleteOption": "[parameters('dataDisks1')[copyIndex('dataDisks')].deleteOption]",
+                    "writeAcceleratorEnabled": "[parameters('dataDisks1')[copyIndex('dataDisks')].writeAcceleratorEnabled]"
+                  }
+                }
+              ]
+            },
+            "networkProfile": {
+              "networkInterfaces": [
+                {
+                  "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaceName1'))]",
+                  "properties": {
+                    "deleteOption": "[parameters('nicDeleteOption')]"
+                  }
+                }
+              ]
+            },
+            "osProfile": {
+              "computerName": "[parameters('virtualMachineComputerName1')]",
+              "adminUsername": "[parameters('adminUsername')]",
+              "adminPassword": "[parameters('adminPassword')]",
+              "linuxConfiguration": {
+                "patchSettings": {
+                  "patchMode": "ImageDefault"
+                }
+              }
+            },
+            "diagnosticsProfile": {
+              "bootDiagnostics": {
+                "enabled": true
+              }
+            }
+          }
+        },
+        {
+          "type": "Microsoft.Network/virtualNetworks",
+          "apiVersion": "2021-08-01",
+          "name": "[parameters('virtualNetworkName')]",
+          "location": "[parameters('location')]",
+          "properties": {
+            "addressSpace": {
+              "addressPrefixes": [
+                "10.0.0.0/16"
+              ]
+            },
+            "subnets": [
+              {
+                "name": "default",
+                "properties": {
+                  "addressPrefix": "10.0.0.0/24"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "outputs": {
+        "adminUsername": {
+          "type": "String",
+          "value": "[parameters('adminUsername')]"
+        }
+      }
+    },
+    "parameters": {
+      "location": {
+        "value": "eastus"
+      },
+      "networkInterfaceName1": {
+        "value": "ccportal388_z1"
+      },
+      "networkSecurityGroupName": {
+        "value": "ccportal-nsg"
+      },
+      "networkSecurityGroupRules": {
+        "value": [
+          {
+            "name": "HTTPS",
+            "properties": {
+              "priority": 1010,
+              "protocol": "TCP",
+              "access": "Allow",
+              "direction": "Inbound",
+              "sourceApplicationSecurityGroups": [],
+              "destinationApplicationSecurityGroups": [],
+              "sourceAddressPrefix": "*",
+              "sourcePortRange": "*",
+              "destinationAddressPrefix": "*",
+              "destinationPortRange": "443"
+            }
+          },
+          {
+            "name": "HTTP",
+            "properties": {
+              "priority": 1020,
+              "protocol": "TCP",
+              "access": "Allow",
+              "direction": "Inbound",
+              "sourceApplicationSecurityGroups": [],
+              "destinationApplicationSecurityGroups": [],
+              "sourceAddressPrefix": "*",
+              "sourcePortRange": "*",
+              "destinationAddressPrefix": "*",
+              "destinationPortRange": "80"
+            }
+          },
+          {
+            "name": "default-allow-ssh",
+            "properties": {
+              "priority": 1030,
+              "protocol": "TCP",
+              "access": "Allow",
+              "direction": "Inbound",
+              "sourceApplicationSecurityGroups": [],
+              "destinationApplicationSecurityGroups": [],
+              "sourceAddressPrefix": "*",
+              "sourcePortRange": "*",
+              "destinationAddressPrefix": "*",
+              "destinationPortRange": "22"
+            }
+          }
+        ]
+      },
+      "subnetName": {
+        "value": "default"
+      },
+      "publicIpAddressName1": {
+        "value": "ccportal-ip"
+      },
+      "publicIpAddressType": {
+        "value": "Static"
+      },
+      "publicIpAddressSku": {
+        "value": "Standard"
+      },
+      "pipDeleteOption": {
+        "value": "Detach"
+      },
+      "virtualMachineName": {
+        "value": "ccportal"
+      },
+      "virtualMachineName1": {
+        "value": "ccportal"
+      },
+      "virtualNetworkName": {
+        "value": "ccportal-vnet"
+      },
+      "virtualMachineComputerName1": {
+        "value": "ccportal"
+      },
+      "virtualMachineRG": {
+        "value": "pavithraTest"
+      },
+      "osDiskType": {
+        "value": "Premium_LRS"
+      },
+      "osDiskDeleteOption": {
+        "value": "Delete"
+      },
+      "dataDisks1": {
+        "value": [
+          {
+            "lun": 0,
+            "createOption": "fromImage",
+            "deleteOption": "Detach",
+            "caching": "None",
+            "writeAcceleratorEnabled": false,
+            "id": null,
+            "name": null,
+            "storageAccountType": "Premium_LRS",
+            "diskSizeGB": null,
+            "diskEncryptionSet": null
+          }
+        ]
+      },
+      "virtualMachineSize": {
+        "value": "Standard_ND40rs_v2"
+      },
+      "nicDeleteOption": {
+        "value": "Detach"
+      },
+      "adminUsername": {
+        "value": "deployeradmin"
+      },
+      "adminPassword": {
+        "value": "Terawe@12345"
+      },
+      "zone": {
+        "value": "1"
+      }
+    }
+  }
+}
