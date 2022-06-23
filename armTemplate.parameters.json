@@ -113,7 +113,7 @@
           ]
         },
         "virtualMachineSize": {
-          "value": "Standard_ND40rs_v2"
+          "value": "Standard_ND96asr_v4"
         },
         "nicDeleteOption": {
           "value": "Detach"
