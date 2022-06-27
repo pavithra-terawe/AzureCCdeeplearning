@@ -8,11 +8,11 @@
     },
     "networkInterfaceName1": {
       "type": "String",
-      "defaultValue": "ccportal388_z1"
+      "defaultValue": "deeplearning388_z1"
     },
     "networkSecurityGroupName": {
       "type": "String",
-      "defaultValue": "ccportal-nsg"
+      "defaultValue": "deeplearning-nsg"
     },
     "networkSecurityGroupRules": {
       "type": "Array",
@@ -70,7 +70,7 @@
     },
     "publicIpAddressName1": {
       "type": "String",
-      "defaultValue": "ccportal-ip"
+      "defaultValue": "deeplearning-ip"
     },
     "publicIpAddressType": {
       "type": "String",
@@ -86,19 +86,19 @@
     },
     "virtualMachineName": {
       "type": "String",
-      "defaultValue": "ccportal"
+      "defaultValue": "deeplearning"
     },
     "virtualMachineName1": {
       "type": "String",
-      "defaultValue": "ccportal"
+      "defaultValue": "deeplearning"
     },
     "virtualNetworkName": {
       "type": "String",
-      "defaultValue": "ccportal-vnet"
+      "defaultValue": "deeplearning-vnet"
     },
     "virtualMachineComputerName1": {
       "type": "String",
-      "defaultValue": "ccportal"
+      "defaultValue": "deeplearning"
     },
     "virtualMachineRG": {
       "type": "String",
@@ -111,23 +111,6 @@
     "osDiskDeleteOption": {
       "type": "String",
       "defaultValue": "Delete"
-    },
-    "dataDisks1": {
-      "type": "Array",
-      "defaultValue": [
-            {
-              "lun": 0,
-              "createOption": "fromImage",
-              "deleteOption": "Detach",
-              "caching": "None",
-              "writeAcceleratorEnabled": false,
-              "id": null,
-              "name": null,
-              "storageAccountType": "Premium_LRS",
-              "diskSizeGB": null,
-              "diskEncryptionSet": null
-            }
-          ]
     },
     "virtualMachineSize": {
       "type": "String",
@@ -224,11 +207,6 @@
       "zones": [
         "1"
       ],
-      "plan": {
-        "name": "cyclecloud-81",
-        "publisher": "azurecyclecloud",
-        "product": "azure-cyclecloud"
-      },
       "properties": {
         "hardwareProfile": {
           "vmSize": "[parameters('virtualMachineSize')]"
@@ -246,25 +224,7 @@
             "offer": "ubuntu-hpc",
             "sku": "1804",
             "version": "latest"
-          },
-          "copy": [
-            {
-              "name": "dataDisks",
-              "count": "[length(parameters('dataDisks1'))]",
-              "input": {
-                "lun": "[parameters('dataDisks1')[copyIndex('dataDisks')].lun]",
-                "createOption": "[parameters('dataDisks1')[copyIndex('dataDisks')].createOption]",
-                "caching": "[parameters('dataDisks1')[copyIndex('dataDisks')].caching]",
-                "diskSizeGB": "[parameters('dataDisks1')[copyIndex('dataDisks')].diskSizeGB]",
-                "managedDisk": {
-                  "id": "[coalesce(parameters('dataDisks1')[copyIndex('dataDisks')].id, if(equals(parameters('dataDisks1')[copyIndex('dataDisks')].name, json('null')), json('null'), resourceId('Microsoft.Compute/disks', parameters('dataDisks1')[copyIndex('dataDisks')].name)))]",
-                  "storageAccountType": "[parameters('dataDisks1')[copyIndex('dataDisks')].storageAccountType]"
-                },
-                "deleteOption": "[parameters('dataDisks1')[copyIndex('dataDisks')].deleteOption]",
-                "writeAcceleratorEnabled": "[parameters('dataDisks1')[copyIndex('dataDisks')].writeAcceleratorEnabled]"
-              }
-            }
-          ]
+          }
         },
         "networkProfile": {
           "networkInterfaces": [
