@@ -3,13 +3,13 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "location": {
-          "value": "eastus"
+          "value": "westeurope"
         },
         "networkInterfaceName1": {
-          "value": "ccportal388_z1"
+          "value": "deeplearning388_z1"
         },
         "networkSecurityGroupName": {
-          "value": "ccportal-nsg"
+          "value": "deeplearning-nsg"
         },
         "networkSecurityGroupRules": {
           "value": [
@@ -64,7 +64,7 @@
           "value": "default"
         },
         "publicIpAddressName1": {
-          "value": "ccportal-ip"
+          "value": "deeplearning-ip"
         },
         "publicIpAddressType": {
           "value": "Static"
@@ -76,41 +76,25 @@
           "value": "Detach"
         },
         "virtualMachineName": {
-          "value": "ccportal"
+          "value": "deeplearning"
         },
         "virtualMachineName1": {
-          "value": "ccportal"
+          "value": "deeplearning"
         },
         "virtualNetworkName": {
-          "value": "ccportal-vnet"
+          "value": "deeplearning-vnet"
         },
         "virtualMachineComputerName1": {
-          "value": "ccportal"
+          "value": "deeplearning"
         },
         "virtualMachineRG": {
-          "value": "pavithraTest"
+          "value": "terawedev"
         },
         "osDiskType": {
           "value": "Premium_LRS"
         },
         "osDiskDeleteOption": {
           "value": "Delete"
-        },
-        "dataDisks1": {
-          "value": [
-            {
-              "lun": 0,
-              "createOption": "fromImage",
-              "deleteOption": "Detach",
-              "caching": "None",
-              "writeAcceleratorEnabled": false,
-              "id": null,
-              "name": null,
-              "storageAccountType": "Premium_LRS",
-              "diskSizeGB": null,
-              "diskEncryptionSet": null
-            }
-          ]
         },
         "virtualMachineSize": {
           "value": "Standard_ND96asr_v4"
