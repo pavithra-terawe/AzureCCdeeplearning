@@ -66,7 +66,7 @@
               "name": "default-allow-cccloud",
               "properties": {
                 "priority": 1040,
-                "protocol": "Any",
+                "protocol": "*",
                 "access": "Allow",
                 "direction": "Inbound",
                 "sourceApplicationSecurityGroups": [],
