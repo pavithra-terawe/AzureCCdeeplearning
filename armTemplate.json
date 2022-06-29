@@ -150,10 +150,6 @@
     "adminPassword": {
       "type": "SecureString",
       "defaultValue": "Terawe@12345"
-    },
-    "zone": {
-      "type": "String",
-      "defaultValue": "1"
     }
   },
   "variables": {
