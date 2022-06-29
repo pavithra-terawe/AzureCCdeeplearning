@@ -3,131 +3,113 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "location": {
-          "value": "westeurope"
+            "value": "westeurope"
         },
-        "ccloudScriptBlobPath": {
-          "value": "https://testdevtrawe.blob.core.windows.net/test/init.sh?sp=r&st=2022-06-29T12:18:38Z&se=2038-06-29T20:18:38Z&sv=2021-06-08&sr=b&sig=lrBIDx4KJFPpBJKtfWhfe0eSyghnkuYqLTQirpaa43o%3D"
-        },
-         "ccloudScriptFileName": {
-          "value": "init.sh"
-        },
-        "networkInterfaceName1": {
-          "value": "deeplearning388_z1"
+        "networkInterfaceName": {
+            "value": "deeplearning"
         },
         "networkSecurityGroupName": {
-          "value": "deeplearning-nsg"
+            "value": "deeplearning-ng"
         },
         "networkSecurityGroupRules": {
-          "value": [
-            {
-              "name": "HTTPS",
-              "properties": {
-                "priority": 1010,
-                "protocol": "TCP",
-                "access": "Allow",
-                "direction": "Inbound",
-                "sourceApplicationSecurityGroups": [],
-                "destinationApplicationSecurityGroups": [],
-                "sourceAddressPrefix": "*",
-                "sourcePortRange": "*",
-                "destinationAddressPrefix": "*",
-                "destinationPortRange": "443"
-              }
-            },
-              {
-              "name": "default-allow-cccloud",
-              "properties": {
-                "priority": 1040,
-                "protocol": "*",
-                "access": "Allow",
-                "direction": "Inbound",
-                "sourceApplicationSecurityGroups": [],
-                "destinationApplicationSecurityGroups": [],
-                "sourceAddressPrefix": "*",
-                "sourcePortRange": "*",
-                "destinationAddressPrefix": "*",
-                "destinationPortRange": "8080"
-              }
-            },
-            {
-              "name": "HTTP",
-              "properties": {
-                "priority": 1020,
-                "protocol": "TCP",
-                "access": "Allow",
-                "direction": "Inbound",
-                "sourceApplicationSecurityGroups": [],
-                "destinationApplicationSecurityGroups": [],
-                "sourceAddressPrefix": "*",
-                "sourcePortRange": "*",
-                "destinationAddressPrefix": "*",
-                "destinationPortRange": "80"
-              }
-            },
-            {
-              "name": "default-allow-ssh",
-              "properties": {
-                "priority": 1030,
-                "protocol": "TCP",
-                "access": "Allow",
-                "direction": "Inbound",
-                "sourceApplicationSecurityGroups": [],
-                "destinationApplicationSecurityGroups": [],
-                "sourceAddressPrefix": "*",
-                "sourcePortRange": "*",
-                "destinationAddressPrefix": "*",
-                "destinationPortRange": "22"
-              }
-            }
-          ]
+            "value": [
+                {
+                    "name": "SSH",
+                    "properties": {
+                        "priority": 1010,
+                        "protocol": "TCP",
+                        "access": "Allow",
+                        "direction": "Inbound",
+                        "sourceApplicationSecurityGroups": [],
+                        "destinationApplicationSecurityGroups": [],
+                        "sourceAddressPrefix": "*",
+                        "sourcePortRange": "*",
+                        "destinationAddressPrefix": "*",
+                        "destinationPortRange": "22"
+                    }
+                },
+				{
+                    "name": "Cycle Cloud",
+                    "properties": {
+                        "priority": 1020,
+                        "protocol": "*",
+                        "access": "Allow",
+                        "direction": "Inbound",
+                        "sourceApplicationSecurityGroups": [],
+                        "destinationApplicationSecurityGroups": [],
+                        "sourceAddressPrefix": "*",
+                        "sourcePortRange": "*",
+                        "destinationAddressPrefix": "*",
+                        "destinationPortRange": "8080"
+                    }
+                }
+            ]
         },
         "subnetName": {
-          "value": "default"
-        },
-        "publicIpAddressName1": {
-          "value": "deeplearning-ip"
-        },
-        "publicIpAddressType": {
-          "value": "Static"
-        },
-        "publicIpAddressSku": {
-          "value": "Standard"
-        },
-        "pipDeleteOption": {
-          "value": "Detach"
-        },
-        "virtualMachineName": {
-          "value": "deeplearning"
-        },
-        "virtualMachineName1": {
-          "value": "deeplearning"
+            "value": "default"
         },
         "virtualNetworkName": {
-          "value": "deeplearning-vnet"
+            "value": "deeplearning-vnet"
         },
-        "virtualMachineComputerName1": {
-          "value": "deeplearning"
+        "addressPrefixes": {
+            "value": [
+                "172.21.0.0/16"
+            ]
+        },
+        "subnets": {
+            "value": [
+                {
+                    "name": "default",
+                    "properties": {
+                        "addressPrefix": "172.21.0.0/24"
+                    }
+                }
+            ]
+        },
+        "publicIpAddressName": {
+            "value": "deeplearning-ip"
+        },
+        "publicIpAddressType": {
+            "value": "Dynamic"
+        },
+        "publicIpAddressSku": {
+            "value": "Basic"
+        },
+        "pipDeleteOption": {
+            "value": "Detach"
+        },
+        "virtualMachineName": {
+            "value": "deeplearning"
+        },
+        "virtualMachineComputerName": {
+            "value": "deeplearning"
         },
         "virtualMachineRG": {
-          "value": "terawedev"
+            "value": "testdev"
         },
         "osDiskType": {
-          "value": "Premium_LRS"
+            "value": "Premium_LRS"
         },
         "osDiskDeleteOption": {
-          "value": "Delete"
+            "value": "Delete"
         },
         "virtualMachineSize": {
-          "value": "Standard_ND96asr_v4"
+            "value": "Standard_ND40rs_v2"
         },
         "nicDeleteOption": {
-          "value": "Detach"
+            "value": "Detach"
         },
         "adminUsername": {
-          "value": "deployeradmin"
+            "value": "deployeradmin"
         },
         "adminPassword": {
-          "value": "Terawe@12345"
-        }
+            "value": "Terawe@12345"
+        },
+		"dpEnvScriptPath": {
+			"value": "https://testdevtrawe.blob.core.windows.net/test/init.sh?sp=r&st=2022-06-29T16:58:03Z&se=2032-06-30T00:58:03Z&sv=2021-06-08&sr=b&sig=bI8l306z7bRToqAH2RtORid%2FZTUipkUhUKLTkCkmD2U%3D"
+        },
+		"dpEnvScriptName": {
+			"value": "init.sh"
+		},
     }
 }
