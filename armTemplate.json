@@ -1,296 +1,268 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-  "contentVersion": "1.0.0.0",
-  "parameters": {
-    "location": {
-      "type": "String",
-      "defaultValue": "westeurope"
-    },
-    "networkInterfaceName1": {
-      "type": "String",
-      "defaultValue": "deeplearning388_z1"
-    },
-    "networkSecurityGroupName": {
-      "type": "String",
-      "defaultValue": "deeplearning-nsg"
-    },
-    "networkSecurityGroupRules": {
-      "type": "Array",
-      "defaultValue": [
-            {
-              "name": "HTTPS",
-              "properties": {
-                "priority": 1010,
-                "protocol": "TCP",
-                "access": "Allow",
-                "direction": "Inbound",
-                "sourceApplicationSecurityGroups": [],
-                "destinationApplicationSecurityGroups": [],
-                "sourceAddressPrefix": "*",
-                "sourcePortRange": "*",
-                "destinationAddressPrefix": "*",
-                "destinationPortRange": "443"
-              }
-            },
-            {
-              "name": "HTTP",
-              "properties": {
-                "priority": 1020,
-                "protocol": "TCP",
-                "access": "Allow",
-                "direction": "Inbound",
-                "sourceApplicationSecurityGroups": [],
-                "destinationApplicationSecurityGroups": [],
-                "sourceAddressPrefix": "*",
-                "sourcePortRange": "*",
-                "destinationAddressPrefix": "*",
-                "destinationPortRange": "80"
-              }
-            },
-            {
-              "name": "default-allow-ssh",
-              "properties": {
-                "priority": 1030,
-                "protocol": "TCP",
-                "access": "Allow",
-                "direction": "Inbound",
-                "sourceApplicationSecurityGroups": [],
-                "destinationApplicationSecurityGroups": [],
-                "sourceAddressPrefix": "*",
-                "sourcePortRange": "*",
-                "destinationAddressPrefix": "*",
-                "destinationPortRange": "22"
-              }
-            },
-        {
-              "name": "default-allow-cccloud",
-              "properties": {
-                "priority": 1040,
-                "protocol": "*",
-                "access": "Allow",
-                "direction": "Inbound",
-                "sourceApplicationSecurityGroups": [],
-                "destinationApplicationSecurityGroups": [],
-                "sourceAddressPrefix": "*",
-                "sourcePortRange": "*",
-                "destinationAddressPrefix": "*",
-                "destinationPortRange": "8080"
-              }
-            }
-          ]
-    },
-    "subnetName": {
-      "type": "String",
-      "defaultValue": "default"
-    },
-    "publicIpAddressName1": {
-      "type": "String",
-      "defaultValue": "deeplearning-ip"
-    },
-    "publicIpAddressType": {
-      "type": "String",
-      "defaultValue": "Static"
-    },
-    "publicIpAddressSku": {
-      "type": "String",
-      "defaultValue": "Standard"
-    },
-    "pipDeleteOption": {
-      "type": "String",
-      "defaultValue": "Detach"
-    },
-    "virtualMachineName": {
-      "type": "String",
-      "defaultValue": "deeplearning"
-    },
-    "virtualMachineName1": {
-      "type": "String",
-      "defaultValue": "deeplearning"
-    },
-    "virtualNetworkName": {
-      "type": "String",
-      "defaultValue": "deeplearning-vnet"
-    },
-    "ccloudScriptBlobPath": {
-      "type": "String",
-      "defaultValue": "https://testdevtrawe.blob.core.windows.net/test/init.sh?sp=r&st=2022-06-29T12:18:38Z&se=2038-06-29T20:18:38Z&sv=2021-06-08&sr=b&sig=lrBIDx4KJFPpBJKtfWhfe0eSyghnkuYqLTQirpaa43o%3D"
-    },
-     "ccloudScriptFileName": {
-      "type": "String",
-      "defaultValue": "init.sh"
-    },
-    "virtualMachineComputerName1": {
-      "type": "String",
-      "defaultValue": "deeplearning"
-    },
-    "virtualMachineRG": {
-      "type": "String",
-      "defaultValue": "teraweDev"
-    },
-    "osDiskType": {
-      "type": "String",
-      "defaultValue": "Premium_LRS"
-    },
-    "osDiskDeleteOption": {
-      "type": "String",
-      "defaultValue": "Delete"
-    },
-    "virtualMachineSize": {
-      "type": "String",
-      "defaultValue": "Standard_ND96asr_v4"
-    },
-    "nicDeleteOption": {
-      "type": "String",
-      "defaultValue": "Detach"
-    },
-    "adminUsername": {
-      "type": "String",
-      "defaultValue": "deployeradmin"
-    },
-    "adminPassword": {
-      "type": "SecureString",
-      "defaultValue": "Terawe@12345"
-    }
-  },
-  "variables": {
-    "nsgId": "[resourceId(resourceGroup().name, 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]",
-    "vnetId": "[resourceId(resourceGroup().name,'Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
-    "subnetReference": "[concat(variables('vnetId'), '/subnets/', parameters('subnetName'))]"
-  },
-  "resources": [
-    {
-      "type": "Microsoft.Network/networkInterfaces",
-      "apiVersion": "2021-03-01",
-      "name": "[parameters('networkInterfaceName1')]",
-      "location": "[parameters('location')]",
-      "dependsOn": [
-        "[concat('Microsoft.Network/networkSecurityGroups/', parameters('networkSecurityGroupName'))]",
-        "[concat('Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'))]",
-        "[concat('Microsoft.Network/publicIpAddresses/', parameters('publicIpAddressName1'))]"
-      ],
-      "properties": {
-        "ipConfigurations": [
-          {
-            "name": "ipconfig1",
-            "properties": {
-              "subnet": {
-                "id": "[variables('subnetReference')]"
-              },
-              "privateIPAllocationMethod": "Dynamic",
-              "publicIpAddress": {
-                "id": "[resourceId(resourceGroup().name, 'Microsoft.Network/publicIpAddresses', parameters('publicIpAddressName1'))]",
-                "properties": {
-                  "deleteOption": "[parameters('pipDeleteOption')]"
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "String",
+            "defaultValue": "westeurope"
+        },
+        "networkInterfaceName": {
+            "type": "String",
+            "defaultValue": "deeplearning"
+        },
+        "networkSecurityGroupName": {
+            "type": "String",
+            "defaultValue": "deeplearning-ng"
+        },
+        "networkSecurityGroupRules": {
+            "type": "Array",
+            "defaultValue": [
+                {
+                    "name": "SSH",
+                    "properties": {
+                        "priority": 1010,
+                        "protocol": "TCP",
+                        "access": "Allow",
+                        "direction": "Inbound",
+                        "sourceApplicationSecurityGroups": [],
+                        "destinationApplicationSecurityGroups": [],
+                        "sourceAddressPrefix": "*",
+                        "sourcePortRange": "*",
+                        "destinationAddressPrefix": "*",
+                        "destinationPortRange": "22"
+                    }
+                },
+                {
+                    "name": "Cycle Cloud",
+                    "properties": {
+                        "priority": 1020,
+                        "protocol": "*",
+                        "access": "Allow",
+                        "direction": "Inbound",
+                        "sourceApplicationSecurityGroups": [],
+                        "destinationApplicationSecurityGroups": [],
+                        "sourceAddressPrefix": "*",
+                        "sourcePortRange": "*",
+                        "destinationAddressPrefix": "*",
+                        "destinationPortRange": "8080"
+                    }
                 }
-              }
-            }
-          }
-        ],
-        "networkSecurityGroup": {
-          "id": "[variables('nsgId')]"
-        }
-      }
+            ]
+        },
+        "subnetName": {
+            "type": "String",
+            "defaultValue": "default"
+        },
+        "virtualNetworkName": {
+            "type": "String",
+            "defaultValue": "deeplearning-vnet"
+        },
+        "addressPrefixes": {
+            "type": "Array",
+            "defaultValue": [
+                "172.21.0.0/16"
+            ]
+        },
+        "subnets": {
+            "type": "Array",
+            "defaultValue": [
+                {
+                    "name": "default",
+                    "properties": {
+                        "addressPrefix": "172.21.0.0/24"
+                    }
+                }
+            ]
+        },
+        "publicIpAddressName": {
+            "type": "String",
+            "defaultValue": "deeplearning-ip"
+        },
+        "publicIpAddressType": {
+            "type": "String",
+            "defaultValue": "Dynamic"
+        },
+        "publicIpAddressSku": {
+            "type": "String",
+            "defaultValue": "Basic"
+        },
+        "pipDeleteOption": {
+            "type": "String",
+            "defaultValue": "Detach"
+        },
+        "virtualMachineName": {
+            "type": "String",
+            "defaultValue": "deeplearning"
+        },
+        "virtualMachineComputerName": {
+            "type": "String",
+            "defaultValue": "deeplearning"
+        },
+        "virtualMachineRG": {
+            "type": "String",
+            "defaultValue": "testdev"
+        },
+        "osDiskType": {
+            "type": "String",
+            "defaultValue": "Premium_LRS"
+        },
+        "osDiskDeleteOption": {
+            "type": "String",
+            "defaultValue": "Delete"
+        },
+        "virtualMachineSize": {
+            "type": "String",
+            "defaultValue": "Standard_ND40rs_v2"
+        },
+        "nicDeleteOption": {
+            "type": "String",
+            "defaultValue": "Detach"
+        },
+        "adminUsername": {
+            "type": "String",
+            "defaultValue": "deployeradmin"
+        },
+        "adminPassword": {
+            "type": "SecureString",
+            "defaultValue": "Terawe@12345"
+        },
+		"dpEnvScriptPath": {
+			"type": "String",
+			"defaultValue": "https://testdevtrawe.blob.core.windows.net/test/init.sh?sp=r&st=2022-06-29T16:58:03Z&se=2032-06-30T00:58:03Z&sv=2021-06-08&sr=b&sig=bI8l306z7bRToqAH2RtORid%2FZTUipkUhUKLTkCkmD2U%3D"
+		},
+		"dpEnvScriptName": {
+			"type": "String",
+			"defaultValue": "init.sh"
+		},
     },
-    {
-      "type": "Microsoft.Network/networkSecurityGroups",
-      "apiVersion": "2019-02-01",
-      "name": "[parameters('networkSecurityGroupName')]",
-      "location": "[parameters('location')]",
-      "properties": {
-        "securityRules": "[parameters('networkSecurityGroupRules')]"
-      }
+    "variables": {
+        "nsgId": "[resourceId(resourceGroup().name, 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]",
+        "vnetName": "[parameters('virtualNetworkName')]",
+        "vnetId": "[resourceId(resourceGroup().name,'Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
+        "subnetRef": "[concat(variables('vnetId'), '/subnets/', parameters('subnetName'))]"
     },
-    {
-      "type": "Microsoft.Network/publicIpAddresses",
-      "apiVersion": "2020-08-01",
-      "name": "[parameters('publicIpAddressName1')]",
-      "location": "[parameters('location')]",
-      "sku": {
-        "name": "[parameters('publicIpAddressSku')]"
-      },
-      "zones": [
-        "1"
-      ],
-      "properties": {
-        "publicIpAllocationMethod": "[parameters('publicIpAddressType')]"
-      }
-    },
-    {
-      "type": "Microsoft.Compute/virtualMachines",
-      "apiVersion": "2021-07-01",
-      "name": "[parameters('virtualMachineName1')]",
-      "location": "[parameters('location')]",
-      "dependsOn": [
-        "[concat('Microsoft.Network/networkInterfaces/', parameters('networkInterfaceName1'))]"
-      ],
-      "properties": {
-        "hardwareProfile": {
-          "vmSize": "[parameters('virtualMachineSize')]"
-        },
-        "storageProfile": {
-          "osDisk": {
-            "createOption": "fromImage",
-            "managedDisk": {
-              "storageAccountType": "[parameters('osDiskType')]"
-            },
-            "deleteOption": "[parameters('osDiskDeleteOption')]"
-          },
-          "imageReference": {
-            "publisher": "microsoft-dsvm",
-            "offer": "ubuntu-hpc",
-            "sku": "1804",
-            "version": "latest"
-          }
-        },
-        "networkProfile": {
-          "networkInterfaces": [
-            {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaceName1'))]",
-              "properties": {
-                "deleteOption": "[parameters('nicDeleteOption')]"
-              }
-            }
-          ]
-        },
-        "osProfile": {
-          "computerName": "[parameters('virtualMachineComputerName1')]",
-          "adminUsername": "[parameters('adminUsername')]",
-          "adminPassword": "[parameters('adminPassword')]",
-          "linuxConfiguration": {
-            "patchSettings": {
-              "patchMode": "ImageDefault"
-            }
-          }
-        },
-        "diagnosticsProfile": {
-          "bootDiagnostics": {
-            "enabled": true
-          }
-        }
-      }
-    },
-    {
-      "type": "Microsoft.Network/virtualNetworks",
-      "apiVersion": "2021-08-01",
-      "name": "[parameters('virtualNetworkName')]",
-      "location": "[parameters('location')]",
-      "properties": {
-        "addressSpace": {
-          "addressPrefixes": [
-            "10.0.0.0/16"
-          ]
-        },
-        "subnets": [
-          {
-            "name": "default",
+    "resources": [
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2021-03-01",
+            "name": "[parameters('networkInterfaceName')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/networkSecurityGroups/', parameters('networkSecurityGroupName'))]",
+                "[concat('Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'))]",
+                "[concat('Microsoft.Network/publicIpAddresses/', parameters('publicIpAddressName'))]"
+            ],
             "properties": {
-              "addressPrefix": "10.0.0.0/24"
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "subnet": {
+                                "id": "[variables('subnetRef')]"
+                            },
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIpAddress": {
+                                "id": "[resourceId(resourceGroup().name, 'Microsoft.Network/publicIpAddresses', parameters('publicIpAddressName'))]",
+                                "properties": {
+                                    "deleteOption": "[parameters('pipDeleteOption')]"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "networkSecurityGroup": {
+                    "id": "[variables('nsgId')]"
+                }
             }
-          }
-        ]
-      }
-    },
-    {
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2019-02-01",
+            "name": "[parameters('networkSecurityGroupName')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "securityRules": "[parameters('networkSecurityGroupRules')]"
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2020-11-01",
+            "name": "[parameters('virtualNetworkName')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": "[parameters('addressPrefixes')]"
+                },
+                "subnets": "[parameters('subnets')]"
+            }
+        },
+        {
+            "type": "Microsoft.Network/publicIpAddresses",
+            "apiVersion": "2020-08-01",
+            "name": "[parameters('publicIpAddressName')]",
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "[parameters('publicIpAddressSku')]"
+            },
+            "properties": {
+                "publicIpAllocationMethod": "[parameters('publicIpAddressType')]"
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2021-07-01",
+            "name": "[parameters('virtualMachineName')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/networkInterfaces/', parameters('networkInterfaceName'))]"
+            ],
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[parameters('virtualMachineSize')]"
+                },
+                "storageProfile": {
+                    "osDisk": {
+                        "createOption": "fromImage",
+                        "managedDisk": {
+                            "storageAccountType": "[parameters('osDiskType')]"
+                        },
+                        "deleteOption": "[parameters('osDiskDeleteOption')]"
+                    },
+                    "imageReference": {
+                        "publisher": "microsoft-dsvm",
+                        "offer": "ubuntu-hpc",
+                        "sku": "1804",
+                        "version": "latest"
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaceName'))]",
+                            "properties": {
+                                "deleteOption": "[parameters('nicDeleteOption')]"
+                            }
+                        }
+                    ]
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachineComputerName')]",
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "adminPassword": "[parameters('adminPassword')]",
+                    "linuxConfiguration": {
+                        "patchSettings": {
+                            "patchMode": "ImageDefault"
+                        }
+                    }
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true
+                    }
+                }
+            }
+        },
+		{
             "name": "cccloud.custom-script-linux",
             "apiVersion": "2015-01-01",
             "type": "Microsoft.Resources/deployments",
@@ -302,14 +274,14 @@
                 "parameters": {
                     "fileUris": {
                         "value": [
-                            "https://testdevtrawe.blob.core.windows.net/test/init.sh?sp=r&se=2022-06-29T11:17:43Z&sv=2021-06-08&sr=b&sig=czdQUJmzg5%2BBNOewjPrEzhjzFOlB8O%2FXRkHMebBapYs%3D"
+                            "[parameters('dpEnvScriptPath')]"
                         ]
                     },
                     "commandToExecute": {
-                        "value": "sh init.sh"
+                        "value": "[concat('sh ', parameters('dpEnvScriptName'))]"
                     },
                     "vmName": {
-                        "value": "[parameters('virtualMachineName1')]"
+                        "value": "[parameters('virtualMachineName')]"
                     },
                     "location": {
                         "value": "[parameters('location')]"
@@ -317,14 +289,14 @@
                 }
             },
             "dependsOn": [
-                "[concat('Microsoft.Compute/virtualMachines/', parameters('virtualMachineName1'))]"
+                "[concat('Microsoft.Compute/virtualMachines/', parameters('virtualMachineName'))]"
             ]
         }
-  ],
-  "outputs": {
-    "adminUsername": {
-      "type": "String",
-      "value": "[parameters('adminUsername')]"
+    ],
+    "outputs": {
+        "adminUsername": {
+            "type": "String",
+            "value": "[parameters('adminUsername')]"
+        }
     }
-  }
 }
