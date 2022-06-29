@@ -128,9 +128,6 @@
         },
         "adminPassword": {
           "value": "Terawe@12345"
-        },
-        "zone": {
-          "value": "1"
         }
     }
 }
