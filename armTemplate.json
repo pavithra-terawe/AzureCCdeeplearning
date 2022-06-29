@@ -133,7 +133,7 @@
 		"dpEnvScriptName": {
 			"type": "String",
 			"defaultValue": "init.sh"
-		},
+		}
     },
     "variables": {
         "nsgId": "[resourceId(resourceGroup().name, 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]",
