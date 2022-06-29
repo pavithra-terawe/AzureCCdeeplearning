@@ -227,9 +227,6 @@
       "dependsOn": [
         "[concat('Microsoft.Network/networkInterfaces/', parameters('networkInterfaceName1'))]"
       ],
-      "zones": [
-        "1"
-      ],
       "properties": {
         "hardwareProfile": {
           "vmSize": "[parameters('virtualMachineSize')]"
