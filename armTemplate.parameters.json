@@ -29,7 +29,7 @@
               }
             },
               {
-              "name": "HTTPS",
+              "name": "default-allow-cccloud",
               "properties": {
                 "priority": 1040,
                 "protocol": "Any",
