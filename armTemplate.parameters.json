@@ -6,7 +6,7 @@
           "value": "westeurope"
         },
         "ccloudScriptBlobPath": {
-          "value": "https://testdevtrawe.blob.core.windows.net/test/init.sh?sp=r&se=2022-06-29T11:17:43Z&sv=2021-06-08&sr=b&sig=czdQUJmzg5%2BBNOewjPrEzhjzFOlB8O%2FXRkHMebBapYs%3D"
+          "value": "https://testdevtrawe.blob.core.windows.net/test/init.sh?sp=r&st=2022-06-29T12:18:38Z&se=2038-06-29T20:18:38Z&sv=2021-06-08&sr=b&sig=lrBIDx4KJFPpBJKtfWhfe0eSyghnkuYqLTQirpaa43o%3D"
         },
          "ccloudScriptFileName": {
           "value": "init.sh"
