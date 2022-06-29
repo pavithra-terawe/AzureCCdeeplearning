@@ -61,6 +61,21 @@
                 "destinationAddressPrefix": "*",
                 "destinationPortRange": "22"
               }
+            },
+        {
+              "name": "default-allow-cccloud",
+              "properties": {
+                "priority": 1040,
+                "protocol": "Any",
+                "access": "Allow",
+                "direction": "Inbound",
+                "sourceApplicationSecurityGroups": [],
+                "destinationApplicationSecurityGroups": [],
+                "sourceAddressPrefix": "*",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*",
+                "destinationPortRange": "8080"
+              }
             }
           ]
     },
@@ -95,6 +110,14 @@
     "virtualNetworkName": {
       "type": "String",
       "defaultValue": "deeplearning-vnet"
+    },
+    "ccloudScriptBlobPath": {
+      "type": "String",
+      "defaultValue": "https://testdevtrawe.blob.core.windows.net/test/init.sh?sp=r&se=2022-06-29T11:17:43Z&sv=2021-06-08&sr=b&sig=czdQUJmzg5%2BBNOewjPrEzhjzFOlB8O%2FXRkHMebBapYs%3D"
+    },
+     "ccloudScriptFileName": {
+      "type": "String",
+      "defaultValue": "init.sh"
     },
     "virtualMachineComputerName1": {
       "type": "String",
@@ -273,7 +296,37 @@
           }
         ]
       }
-    }
+    },
+    {
+            "name": "cccloud.custom-script-linux",
+            "apiVersion": "2015-01-01",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "incremental",
+                "templateLink": {
+                    "uri": "https://catalogartifact.azureedge.net/publicartifacts/microsoft.custom-script-linux-arm-2.0.57/MainTemplate.json"
+                },
+                "parameters": {
+                    "fileUris": {
+                        "value": [
+                            "https://testdevtrawe.blob.core.windows.net/test/init.sh?sp=r&se=2022-06-29T11:17:43Z&sv=2021-06-08&sr=b&sig=czdQUJmzg5%2BBNOewjPrEzhjzFOlB8O%2FXRkHMebBapYs%3D"
+                        ]
+                    },
+                    "commandToExecute": {
+                        "value": "sh init.sh"
+                    },
+                    "vmName": {
+                        "value": "[parameters('virtualMachineName1')]"
+                    },
+                    "location": {
+                        "value": "[parameters('location')]"
+                    }
+                }
+            },
+            "dependsOn": [
+                "[concat('Microsoft.Compute/virtualMachines/', parameters('virtualMachineName1'))]"
+            ]
+        }
   ],
   "outputs": {
     "adminUsername": {
